@@ -1,4 +1,4 @@
-package com.sourav.starter;
+package com.sourav.starter.core;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;

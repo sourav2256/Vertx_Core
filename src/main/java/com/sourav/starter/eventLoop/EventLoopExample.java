@@ -1,4 +1,4 @@
-package eventLoop;
+package com.sourav.starter.eventLoop;
 
 import io.vertx.core.*;
 import io.vertx.core.impl.logging.Logger;
@@ -25,7 +25,7 @@ public class EventLoopExample extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws InterruptedException {
-    LOG.debug("Start {1211111}");
+    // LOG.debug("Start {}",getClass().getName());
     startPromise.complete();
     // Do not do this inside a verticle
     Thread.sleep(5000);

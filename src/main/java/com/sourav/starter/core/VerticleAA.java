@@ -1,9 +1,9 @@
-package com.sourav.starter;
+package com.sourav.starter.core;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 
-public class VerticleAB extends AbstractVerticle {
+public class VerticleAA extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     System.out.println("Start " + getClass().getName());

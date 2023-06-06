@@ -1,4 +1,4 @@
-package com.sourav.starter;
+package com.sourav.starter.core;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.DeploymentOptions;
@@ -7,12 +7,11 @@ import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
+
 import java.util.UUID;
 
 public class MainVerticle extends AbstractVerticle {
-
   private static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
-
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(new MainVerticle());
@@ -36,7 +35,7 @@ public class MainVerticle extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     System.out.println("Start " + getClass().getName());
-    LOG.info("qqqqqqq ");
+    LOG.debug("qqqqqqq");
     vertx.deployVerticle(new VerticalA());
     vertx.deployVerticle(VerticleN.class.getName(),
       new DeploymentOptions()

@@ -1,4 +1,4 @@
-package com.sourav.starter;
+package com.sourav.starter.core;
 
 import io.vertx.core.Vertx;
 import io.vertx.junit5.VertxExtension;
