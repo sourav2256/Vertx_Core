@@ -36,7 +36,7 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
     System.out.println("Start " + getClass().getName());
     LOG.debug("qqqqqqq");
-    vertx.deployVerticle(new VerticalA());
+    vertx.deployVerticle(new VerticleA());
     vertx.deployVerticle(VerticleN.class.getName(),
       new DeploymentOptions()
         .setInstances(4)
