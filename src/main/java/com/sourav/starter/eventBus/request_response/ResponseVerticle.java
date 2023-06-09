@@ -9,14 +9,14 @@ import io.vertx.core.impl.logging.LoggerFactory;
 
 public class ResponseVerticle extends AbstractVerticle {
   private static final Logger LOG = LoggerFactory.getLogger(Worker.class);
+
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     startPromise.complete();
     EventBus eventBus = vertx.eventBus();
-    String message = "Hello World!";
-    LOG.info("Sending: "+ message);
-    eventBus.request("my.request.address", message, reply -> {
-      LOG.info("Response: "+ reply.result());
+    eventBus.<String>consumer(RequestVerticle.ADDRESS, message -> {
+      LOG.info("Received Message: "+ message.body());
+      message.reply("Received your message. Thanks!");
     });
   }
 }
