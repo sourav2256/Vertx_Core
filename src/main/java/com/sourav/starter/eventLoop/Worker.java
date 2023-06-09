@@ -27,19 +27,19 @@ public class Worker extends AbstractVerticle {
 
   private void executeBlockingCode() {
     vertx.executeBlocking(event -> {
-      LOG.debug("Executing blocking code");
+      LOG.info("Executing blocking code");
       try {
         Thread.sleep(5000);
         event.complete();
       } catch (InterruptedException e) {
-        LOG.error("Failed: ", e);
+        LOG.info("Failed: ", e);
         event.fail(e);
       }
     }, result -> {
       if (result.succeeded()) {
-        LOG.debug("Blocking call done.");
+        LOG.info("Blocking call done.");
       } else {
-        LOG.debug("Blocking call failed due to:", result.cause());
+        LOG.info("Blocking call failed due to:", result.cause());
       }
     });
   }
