@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class JsonObjectExample {
+class JsonObjectExampleTest {
   @Test
   void jsonObjectCanBeMapped() {
     JsonObject entries = new JsonObject();
@@ -26,7 +26,7 @@ class JsonObjectExample {
 
   @Test
   void jsonObjectCanBeCreatedFromMap() {
-    Map<String, Object> entries = new HashMap();
+    Map<String, Object> entries = new HashMap<>();
     entries.put("id", 1);
     entries.put("name", "Sourav");
     entries.put("is_in_love", false);
