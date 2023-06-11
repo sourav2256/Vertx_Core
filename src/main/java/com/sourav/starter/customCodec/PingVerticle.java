@@ -13,10 +13,11 @@ public class PingVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
-    startPromise.complete();
     EventBus eventBus = vertx.eventBus();
     final Ping message = new Ping("Hello", true);
     LOG.info("Sending: " + message);
+    // Registered only once
+    eventBus.registerDefaultCodec(Ping.class, new LocalMessageCodec<>(Ping.class));
     eventBus.<Pong>request(ADDRESS, message, reply -> {
       if(reply.failed()) {
         LOG.error("Failed: "+ reply.cause());
@@ -24,5 +25,6 @@ public class PingVerticle extends AbstractVerticle {
       }
       LOG.info("Response: " + reply.result().body());
     });
+    startPromise.complete();
   }
 }

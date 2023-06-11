@@ -12,13 +12,14 @@ public class PongVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
-    startPromise.complete();
     EventBus eventBus = vertx.eventBus();
+    eventBus.registerDefaultCodec(Pong.class, new LocalMessageCodec<>(Pong.class));
     eventBus.<Ping>consumer(PingVerticle.ADDRESS, message -> {
       LOG.info("Received Message: "+ message.body());
       message.reply(new Pong(0));
     }).exceptionHandler(error -> {
       LOG.error("Error: ", error);
     });
+    startPromise.complete();
   }
 }
