@@ -1,5 +1,6 @@
 package com.sourav.starter.core.jsonObject;
 
+import com.sourav.starter.jsonObject.Person;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.Test;
@@ -53,5 +54,16 @@ class JsonObjectExampleTest {
     ;
 
     assertEquals("[{\"id\":1},{\"id\":2},{\"id\":3},\"Sourav\"]", jsonArray.encode());
+  }
+
+  @Test
+  void camMapJavaObject() {
+    Person person = new Person(1, "sourav", true);
+    JsonObject entries = JsonObject.mapFrom(person);
+
+    assertEquals(person.getId(), entries.getInteger("id"));
+
+    Person person1 = entries.mapTo(Person.class);
+    assertEquals(person1.getId(), person.getId());
   }
 }
