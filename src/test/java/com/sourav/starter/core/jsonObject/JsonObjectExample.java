@@ -1,5 +1,6 @@
 package com.sourav.starter.core.jsonObject;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.junit.jupiter.api.Test;
 
@@ -39,5 +40,18 @@ class JsonObjectExampleTest {
     assertEquals(false, asJsonObject.getBoolean("is_in_love"));
     assertEquals("false", asJsonObject.getString("is_in_love"));
 
+  }
+
+  @Test
+  void jsonArrayCanBeMapped() {
+    JsonArray jsonArray = new JsonArray();
+    jsonArray
+      .add(new JsonObject().put("id", 1))
+      .add(new JsonObject().put("id", 2))
+      .add(new JsonObject().put("id", 3))
+      .add("Sourav")
+    ;
+
+    assertEquals("[{\"id\":1},{\"id\":2},{\"id\":3},\"Sourav\"]", jsonArray.encode());
   }
 }
