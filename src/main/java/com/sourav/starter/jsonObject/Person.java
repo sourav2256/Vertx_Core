@@ -6,7 +6,7 @@ public class Person {
   private String name;
   private boolean is_in_love;
 
-  public Person() {
+  public Person() { // default contractor is required to deserialize
     //  deserialize from Object value
   }
 

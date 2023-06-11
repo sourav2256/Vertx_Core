@@ -57,13 +57,13 @@ class JsonObjectExampleTest {
   }
 
   @Test
-  void camMapJavaObject() {
+  void canMapJavaObject() {
     Person person = new Person(1, "sourav", true);
-    JsonObject entries = JsonObject.mapFrom(person);
+    JsonObject entries = JsonObject.mapFrom(person); // java object to json
 
     assertEquals(person.getId(), entries.getInteger("id"));
 
-    Person person1 = entries.mapTo(Person.class);
+    Person person1 = entries.mapTo(Person.class); // json to java object
     assertEquals(person1.getId(), person.getId());
   }
 }
