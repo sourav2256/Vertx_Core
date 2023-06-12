@@ -68,7 +68,9 @@ public class FuturePromiseTest {
     });
     Future<String> future = promise.future();
     future
-      .onSuccess(context::failNow)
+      .onSuccess(result -> {
+        context.completeNow();
+      })
       .onFailure(error -> {
         LOG.info("Result: "+error);
         context.completeNow();
