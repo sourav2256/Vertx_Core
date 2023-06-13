@@ -93,16 +93,17 @@ public class FuturePromiseTest {
     Future<String> future = promise.future();
     future
       .map(asString -> {
-        LOG.info("Map String to JsonObject");
+        LOG.info("Map String toJsonObject");
         return new JsonObject().put("key", asString);
       })
+      //.mapEmpty()
       .map(jssonObject -> new JsonArray().add(jssonObject))
       .onSuccess(result -> {
         LOG.info("Result: " + result + " of type " + result.getClass().getSimpleName());
         context.completeNow();
       })
       .onFailure(context::failNow);
-    LOG.info("End");
+      LOG.info("End");
   }
 
   @Test
@@ -135,7 +136,8 @@ public class FuturePromiseTest {
     var futureTwo = two.future();
     var futureThree = three.future();
 
-    CompositeFuture.any(futureOne, futureTwo, futureThree)
+    // CompositeFuture.any(futureOne, futureTwo, futureThree)
+    CompositeFuture.all(futureOne, futureTwo, futureThree)
       .onFailure(context::failNow)
       .onSuccess(result -> {
         LOG.info("Success");
