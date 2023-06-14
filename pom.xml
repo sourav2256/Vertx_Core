@@ -66,6 +66,24 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>3.3.2</version>
+        <configuration>
+          <container>
+            <mainClass>com.sourav.starter.core.MainVerticle</mainClass>
+          </container>
+          <from>
+            <image>
+              adoptopenjdk:11-jre-hotspot
+            </image>
+          </from>
+          <to>
+            <image>myimage</image>
+          </to>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
