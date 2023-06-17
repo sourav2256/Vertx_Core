@@ -31,6 +31,16 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
 
     Router router = Router.router(vertx);
+    router.route().failureHandler(errorContext -> {
+      if (errorContext.response().ended()) {
+        // Ignore (client closes the connection)
+        return;
+      }
+      LOG.error("Router Error: "+ errorContext.failure());
+      errorContext.response()
+        .setStatusCode(500)
+        .end(new JsonObject().put("message", "Something went wrong").toBuffer());
+    });
     AssetsRestAPI.attach(router);
 
     vertx.createHttpServer()

@@ -13,10 +13,10 @@ public class AssetsRestAPI {
     router.get("/assets").handler(context -> {
       final JsonArray response = new JsonArray();
       response
-        .add(new JsonObject().put("symbol", "AAPL"))
-        .add(new JsonObject().put("symbol", "AMEX"))
-        .add(new JsonObject().put("symbol", "NFLX"))
-        .add(new JsonObject().put("symbol", "TSLA"));
+        .add(new Asset("AAPL"))
+        .add(new Asset("AMEX"))
+        .add(new Asset("NFLX"))
+        .add(new Asset("TSLA"));
       LOG.info("Path "+ context.normalizedPath() +" response with "+ response.encode());
       context.response().end(response.toBuffer());
     });
