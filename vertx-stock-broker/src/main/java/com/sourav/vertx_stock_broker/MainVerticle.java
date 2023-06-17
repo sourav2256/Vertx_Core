@@ -1,6 +1,7 @@
 package com.sourav.vertx_stock_broker;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
@@ -8,6 +9,7 @@ import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -31,16 +33,7 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
 
     Router router = Router.router(vertx);
-    router.route().failureHandler(errorContext -> {
-      if (errorContext.response().ended()) {
-        // Ignore (client closes the connection)
-        return;
-      }
-      LOG.error("Router Error: "+ errorContext.failure());
-      errorContext.response()
-        .setStatusCode(500)
-        .end(new JsonObject().put("message", "Something went wrong").toBuffer());
-    });
+    router.route().failureHandler(getRoutingContextHandler());
     AssetsRestAPI.attach(router);
 
     vertx.createHttpServer()
@@ -54,5 +47,18 @@ public class MainVerticle extends AbstractVerticle {
         startPromise.fail(http.cause());
       }
     });
+  }
+
+  private static Handler<RoutingContext> getRoutingContextHandler() {
+    return errorContext -> {
+      if (errorContext.response().ended()) {
+        // Ignore (client closes the connection)
+        return;
+      }
+      LOG.error("Router Error: " + errorContext.failure());
+      errorContext.response()
+        .setStatusCode(500)
+        .end(new JsonObject().put("message", "Something went wrong").toBuffer());
+    };
   }
 }
