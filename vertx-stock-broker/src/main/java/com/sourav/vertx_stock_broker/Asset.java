@@ -1,13 +1,9 @@
 package com.sourav.vertx_stock_broker;
 
+import lombok.Value;
+
+@Value
 public class Asset {
-  private final String name;
+  String name;
 
-  public Asset(String name) {
-    this.name = name;
-  }
-
-  public String getName() {
-    return name;
-  }
 }
