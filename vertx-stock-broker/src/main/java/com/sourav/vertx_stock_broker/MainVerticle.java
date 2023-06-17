@@ -31,16 +31,7 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
 
     Router router = Router.router(vertx);
-    router.get("/assets").handler(context -> {
-      final JsonArray response = new JsonArray();
-      response
-        .add(new JsonObject().put("symbol", "AAPL"))
-        .add(new JsonObject().put("symbol", "AMEX"))
-        .add(new JsonObject().put("symbol", "NFLX"))
-        .add(new JsonObject().put("symbol", "TSLA"));
-      LOG.info("Path "+ context.normalizedPath() +" response with "+ response.encode());
-      context.response().end(response.toBuffer());
-    });
+    AssetsRestAPI.attach(router);
 
     vertx.createHttpServer()
       .requestHandler(router)
