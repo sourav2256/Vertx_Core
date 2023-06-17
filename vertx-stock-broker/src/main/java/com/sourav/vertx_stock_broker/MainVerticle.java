@@ -42,6 +42,7 @@ public class MainVerticle extends AbstractVerticle {
         .end(new JsonObject().put("message", "Something went wrong").toBuffer());
     });
     AssetsRestAPI.attach(router);
+    QuotesRestAPI.attach(router);
 
     vertx.createHttpServer()
       .requestHandler(router)
