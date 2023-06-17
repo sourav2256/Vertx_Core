@@ -6,8 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="starter" />
+        <module name="vertx-stock-broker" />
+        <module name="vertx-starter" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="vertx-starter (1)" target="11" />
+      <module name="vertx-starter (2)" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>
