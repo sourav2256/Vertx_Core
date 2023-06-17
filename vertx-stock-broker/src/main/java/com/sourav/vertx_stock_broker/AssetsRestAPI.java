@@ -3,7 +3,6 @@ package com.sourav.vertx_stock_broker;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
 public class AssetsRestAPI {
