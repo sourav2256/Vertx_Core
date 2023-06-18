@@ -1,5 +1,6 @@
 package com.sourav.vertx_stock_broker;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
@@ -7,8 +8,10 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
 import java.math.BigDecimal;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QuotesRestAPI {
@@ -24,8 +27,17 @@ public class QuotesRestAPI {
       final String assestParam = context.pathParam("asset");
       LOG.info("Asset parameter: " + assestParam);
 
-      Quote quote = cachedQuotes.get(assestParam);
-      JsonObject response = quote.toJsonObject();
+      Optional<Quote> quote = Optional.ofNullable(cachedQuotes.get(assestParam));
+      if(quote.isEmpty()) {
+        context.response()
+          .setStatusCode(HttpResponseStatus.NOT_FOUND.code())
+          .end(new JsonObject()
+          .put("message", "quote for asset " + assestParam + " not available!")
+            .put("path", context.normalizedPath())
+            .toBuffer());
+        return;
+      }
+      JsonObject response = quote.get().toJsonObject();
       LOG.info("Path " + context.normalizedPath() + " response with " + response.encode());
       context.response().end(response.toBuffer());
     });

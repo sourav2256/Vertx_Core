@@ -40,4 +40,20 @@ public class TestQuotesRestAPI {
           }));
 
   }
+
+  @Test
+  void return_quotes_for_unknown_assest(Vertx vertx, VertxTestContext testContext) throws Throwable {
+    WebClient webClient = WebClient.create(vertx,
+      new WebClientOptions().setDefaultPort(MainVerticle.PORT));
+    webClient.get("/quotes/UNKNOWN")
+      .send()
+      .onComplete(testContext.succeeding(response -> {
+        JsonObject jsonObject = response.bodyAsJsonObject();
+        LOG.info("Response: "+ jsonObject);
+        assertEquals("{\"message\":\"quote for asset UNKNOWN not available!\",\"path\":\"/quotes/UNKNOWN\"}", jsonObject.encode());
+        assertEquals(404, response.statusCode());
+        testContext.completeNow();
+      }));
+
+  }
 }
