@@ -7,17 +7,24 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QuotesRestAPI {
   private static final Logger LOG = LoggerFactory.getLogger(QuotesRestAPI.class);
 
   public static void attach(Router router) {
+    Map<String, Quote> cachedQuotes = new HashMap<>();
+    AssetsRestAPI.ASSETS.forEach(asset -> {
+      cachedQuotes.put(asset, initRandomQuote(asset));
+    });
+
     router.get("/quotes/:asset").handler(context -> {
       final String assestParam = context.pathParam("asset");
       LOG.info("Asset parameter: " + assestParam);
 
-      Quote quote = initRandomQuote(assestParam);
+      Quote quote = cachedQuotes.get(assestParam);
       JsonObject response = quote.toJsonObject();
       LOG.info("Path " + context.normalizedPath() + " response with " + response.encode());
       context.response().end(response.toBuffer());
