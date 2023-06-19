@@ -43,6 +43,7 @@ public class MainVerticle extends AbstractVerticle {
     });
     AssetsRestAPI.attach(router);
     QuotesRestAPI.attach(router);
+    WatchListRestAPI.attach(router);
 
     vertx.createHttpServer()
       .requestHandler(router)

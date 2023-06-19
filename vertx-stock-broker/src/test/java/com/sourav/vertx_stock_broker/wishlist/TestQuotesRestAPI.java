@@ -1,10 +1,11 @@
-package com.sourav.vertx_stock_broker.assets;
+package com.sourav.vertx_stock_broker.wishlist;
 
+import com.sourav.vertx_stock_broker.Asset;
 import com.sourav.vertx_stock_broker.MainVerticle;
+import com.sourav.vertx_stock_broker.WatchList;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
@@ -13,6 +14,9 @@ import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,34 +30,27 @@ public class TestQuotesRestAPI {
   }
 
   @Test
-  void return_quotes_for_assest(Vertx vertx, VertxTestContext testContext) throws Throwable {
-    WebClient webClient = WebClient.create(vertx,
-                              new WebClientOptions().setDefaultPort(MainVerticle.PORT));
-    webClient.get("/quotes/AMZN")
-        .send()
-          .onComplete(testContext.succeeding(response -> {
-            JsonObject jsonObject = response.bodyAsJsonObject();
-            LOG.info("Response: "+ jsonObject);
-            assertEquals("{\"name\":\"AMZN\"}", jsonObject.getJsonObject("asset").encode());
-            assertEquals(200, response.statusCode());
-            testContext.completeNow();
-          }));
-
-  }
-
-  @Test
-  void return_quotes_for_unknown_assest(Vertx vertx, VertxTestContext testContext) throws Throwable {
+  void add_and_returns_watchlist_for_account_test(Vertx vertx, VertxTestContext testContext) throws Throwable {
     WebClient webClient = WebClient.create(vertx,
       new WebClientOptions().setDefaultPort(MainVerticle.PORT));
-    webClient.get("/quotes/UNKNOWN")
-      .send()
+    UUID accountID = UUID.randomUUID();
+    webClient.put("/account/watchlist/" + accountID.toString())
+      .sendJsonObject(requestBody())
       .onComplete(testContext.succeeding(response -> {
         JsonObject jsonObject = response.bodyAsJsonObject();
-        LOG.info("Response: "+ jsonObject);
-        assertEquals("{\"message\":\"quote for asset UNKNOWN not available!\",\"path\":\"/quotes/UNKNOWN\"}", jsonObject.encode());
-        assertEquals(404, response.statusCode());
+        LOG.info("Response: " + jsonObject);
+        assertEquals("{\"name\":\"AMZN\"}", jsonObject.getJsonObject("asset").encode());
+        assertEquals(200, response.statusCode());
         testContext.completeNow();
       }));
 
+  }
+
+  private static JsonObject requestBody() {
+    return new WatchList(
+      Arrays.asList(
+        new Asset("AMZN"),
+        new Asset("TSLA")))
+      .toJsonObject();
   }
 }
