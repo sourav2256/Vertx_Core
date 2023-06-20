@@ -3,6 +3,7 @@ package com.sourav.vertx_stock_broker.wishlist;
 import com.sourav.vertx_stock_broker.Asset;
 import com.sourav.vertx_stock_broker.MainVerticle;
 import com.sourav.vertx_stock_broker.WatchList;
+import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
@@ -41,9 +42,46 @@ public class TestWishListRestAPI {
         LOG.info("Response: " + jsonObject);
         assertEquals("{\"assetList\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", jsonObject.encode());
         assertEquals(200, response.statusCode());
-        testContext.completeNow();
-      }));
+      }))
+      .compose(next -> {
+        webClient.get("/account/watchlist/" + accountID)
+          .send()
+          .onComplete(testContext.succeeding(response -> {
+            JsonObject jsonObject = response.bodyAsJsonObject();
+            LOG.info("Response Deleted: " + jsonObject);
+            assertEquals("{\"assetList\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", jsonObject.encode());
+            assertEquals(200, response.statusCode());
+            testContext.completeNow();
+          }));
+        return Future.succeededFuture();
+      });
+  }
 
+  @Test
+  void add_and_delete_watchlist_for_account_test(Vertx vertx, VertxTestContext testContext) throws Throwable {
+    WebClient webClient = WebClient.create(vertx,
+      new WebClientOptions().setDefaultPort(MainVerticle.PORT));
+    UUID accountID = UUID.randomUUID();
+    webClient.put("/account/watchlist/" + accountID)
+      .sendJsonObject(requestBody())
+      .onComplete(testContext.succeeding(response -> {
+        JsonObject jsonObject = response.bodyAsJsonObject();
+        LOG.info("Response: " + jsonObject);
+        assertEquals("{\"assetList\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", jsonObject.encode());
+        assertEquals(200, response.statusCode());
+      }))
+      .compose(next -> {
+        webClient.delete("/account/watchlist/" + accountID)
+          .send()
+          .onComplete(testContext.succeeding(response -> {
+            JsonObject jsonObject = response.bodyAsJsonObject();
+            LOG.info("Response Deleted: " + jsonObject);
+            assertEquals("{\"assetList\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", jsonObject.encode());
+            assertEquals(200, response.statusCode());
+            testContext.completeNow();
+          }));
+        return Future.succeededFuture();
+      });
   }
 
   private static JsonObject requestBody() {

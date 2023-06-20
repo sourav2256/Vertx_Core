@@ -5,6 +5,7 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -17,8 +18,7 @@ public class WatchListRestAPI {
 
     String path = "/account/watchlist/:accountID";
     router.get(path).handler(context -> {
-      final String accountID = context.pathParam("accountID");
-      LOG.info("Path " + context.normalizedPath() + " for account " + accountID);
+      final String accountID = getAccountID(context);
       Optional<WatchList> watchList = Optional.ofNullable(watchListPerAccount.get(UUID.fromString(accountID)));
       if(watchList.isEmpty()) {
         context.response()
@@ -32,13 +32,24 @@ public class WatchListRestAPI {
       context.response().end(watchList.get().toJsonObject().toBuffer());
     });
     router.put(path).handler(context -> {
-      final String accountID = context.pathParam("accountID");
-      LOG.info("Path " + context.normalizedPath() + " for account " + accountID);
+      final String accountID = getAccountID(context);
       JsonObject bodyAsJson = context.getBodyAsJson();
       WatchList watchList = bodyAsJson.mapTo(WatchList.class);
       watchListPerAccount.put(UUID.fromString(accountID), watchList);
       context.response().end(bodyAsJson.toBuffer());
     });
+    router.delete(path).handler(context -> {
+      final String accountID = getAccountID(context);
+      WatchList removedWatchList = watchListPerAccount.remove(UUID.fromString(accountID));
+      LOG.info("Deleted: "+ removedWatchList + " Remaining: " +watchListPerAccount.values());
+      context.response()
+        .end(removedWatchList.toJsonObject().toBuffer());
+    });
+  }
 
+  private static String getAccountID(RoutingContext context) {
+    final String accountID = context.pathParam("accountID");
+    LOG.info("Path " + context.normalizedPath() + " for account " + accountID);
+    return accountID;
   }
 }
