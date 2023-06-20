@@ -1,7 +1,9 @@
 package com.sourav.vertx_stock_broker.assets;
 
 import com.sourav.vertx_stock_broker.MainVerticle;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
@@ -33,10 +35,11 @@ public class TestAssetsRestAPI {
           .onComplete(testContext.succeeding(response -> {
             JsonArray jsonArray = response.bodyAsJsonArray();
             LOG.info("Response: "+ jsonArray);
-            assertEquals("[{\"name\":\"AAPL\"},{\"name\":\"AMEX\"},{\"name\":\"NFLX\"},{\"name\":\"TSLA\"}]", jsonArray.encode());
+            assertEquals("[{\"name\":\"AAPL\"},{\"name\":\"AMEX\"},{\"name\":\"NFLX\"},{\"name\":\"TSLA\"},{\"name\":\"AMZN\"}]", jsonArray.encode());
             assertEquals(200, response.statusCode());
+            assertEquals(HttpHeaderValues.APPLICATION_JSON.toString(),
+              response.getHeader(HttpHeaders.CONTENT_TYPE.toString()));
             testContext.completeNow();
           }));
-
   }
 }

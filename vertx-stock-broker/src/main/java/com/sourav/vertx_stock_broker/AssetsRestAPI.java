@@ -1,5 +1,7 @@
 package com.sourav.vertx_stock_broker;
 
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonArray;
@@ -18,7 +20,9 @@ public class AssetsRestAPI {
       ASSETS.stream().map(Asset::new).forEach(response::add);
       // ASSETS.stream().map(name -> new Asset(name)).forEach(value -> response.add(value));
       LOG.info("Path "+ context.normalizedPath() +" response with "+ response.encode());
-      context.response().end(response.toBuffer());
+      context.response()
+        .putHeader(HttpHeaders.CONTENT_TYPE.toString(), HttpHeaderValues.APPLICATION_JSON.toString())
+        .end(response.toBuffer());
     });
   }
 
