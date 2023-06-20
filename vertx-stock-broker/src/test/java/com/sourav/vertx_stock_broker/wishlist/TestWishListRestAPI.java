@@ -21,7 +21,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(VertxExtension.class)
-public class TestQuotesRestAPI {
+public class TestWishListRestAPI {
   private static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
 
   @BeforeEach
@@ -34,12 +34,12 @@ public class TestQuotesRestAPI {
     WebClient webClient = WebClient.create(vertx,
       new WebClientOptions().setDefaultPort(MainVerticle.PORT));
     UUID accountID = UUID.randomUUID();
-    webClient.put("/account/watchlist/" + accountID.toString())
+    webClient.put("/account/watchlist/" + accountID)
       .sendJsonObject(requestBody())
       .onComplete(testContext.succeeding(response -> {
         JsonObject jsonObject = response.bodyAsJsonObject();
         LOG.info("Response: " + jsonObject);
-        assertEquals("{\"name\":\"AMZN\"}", jsonObject.getJsonObject("asset").encode());
+        assertEquals("{\"assetList\":[{\"name\":\"AMZN\"},{\"name\":\"TSLA\"}]}", jsonObject.encode());
         assertEquals(200, response.statusCode());
         testContext.completeNow();
       }));

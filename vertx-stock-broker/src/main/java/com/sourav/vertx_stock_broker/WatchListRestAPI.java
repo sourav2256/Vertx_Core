@@ -3,7 +3,6 @@ package com.sourav.vertx_stock_broker;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 
@@ -38,7 +37,7 @@ public class WatchListRestAPI {
       JsonObject bodyAsJson = context.getBodyAsJson();
       WatchList watchList = bodyAsJson.mapTo(WatchList.class);
       watchListPerAccount.put(UUID.fromString(accountID), watchList);
-      context.response().end();
+      context.response().end(bodyAsJson.toBuffer());
     });
 
   }

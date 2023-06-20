@@ -7,6 +7,7 @@ import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class MainVerticle extends AbstractVerticle {
 
@@ -31,7 +32,12 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
 
     Router router = Router.router(vertx);
-    router.route().failureHandler(errorContext -> {
+    router.route()
+      .handler(BodyHandler.create()
+        .setBodyLimit(1000)
+        .setHandleFileUploads(true)
+      )
+      .failureHandler(errorContext -> {
       if (errorContext.response().ended()) {
         // Ignore (client closes the connection)
         return;
